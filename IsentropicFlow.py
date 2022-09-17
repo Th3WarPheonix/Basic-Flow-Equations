@@ -1,12 +1,6 @@
 
 """Module containing basic isentropic flow relation equations e.g. stagnation temrperature from Mach number and pressure and vice versa, for all properties"""
 
-# Constants
-Ru = 8.314 # J/mol-K Universal Gas Constant
-Avo = 6.02214076e23 # mol^−1 Avogadro's Number
-Boltz = 1.380649e-23 # J/K Boltzmann Constant
-Euler = 2.71828182845904523536 # Euler's number
-
 def p0(M, p, gamma=1.4):
     """Returns stagnation pressure from static pressure"""
     P0P1 = (1 + (gamma-1)/2.0*M**2.0)**(gamma/(gamma-1))
