@@ -1,12 +1,7 @@
 
 """Module containing converging-diverging nozzle equations e.g. property ratios to sonic velocity values, Mach number from area ratio"""
 
-import math
-# Constants
-Ru = 8.314 # J/mol-K Universal Gas Constant
-Avo = 6.02214076e23 # mol^−1 Avogadro's Number
-Boltz = 1.380649e-23 # J/K Boltzmann Constant
-Euler = 2.71828182845904523536 # Euler's number
+import numpy as np
 
 PRECISION = 1e-7
 
@@ -48,7 +43,7 @@ def MachfromAreaRatio(A, gamma=1.4, case=0):
         a = P**(1/Q)
 
     r = (R-1)/(2*a)
-    X_new = 1/(1+r+math.sqrt(r*r+2*r))
+    X_new = 1/(1+r+np.sqrt(r*r+2*r))
     X = 0
     
     while abs(X - X_new) > PRECISION: #Newton-raphson
@@ -65,18 +60,18 @@ def MachfromAreaRatio(A, gamma=1.4, case=0):
         X_new = X - F/f
 
     if case == 0:
-        M = 1/math.sqrt(X)
+        M = 1/np.sqrt(X)
     elif case == 1: # Subsonic case
-        M = math.sqrt(X)
+        M = np.sqrt(X)
     
     return M
 
 def find_Astar(P, P0, R, M, A, gamma=1.4):
     a = (1+(gamma-1)/2*M**2)**.5
     b = M/P0
-    E = (gamma+1)/(gamma-1)
-    c = math.sqrt(gamma/R* (2/(gamma+1))**E  )**-1
+    c = (gamma+1)/(gamma-1)
+    d = np.sqrt(gamma/R* (2/(gamma+1))**c)**-1
 
-    Astar = P/R*A*math.sqrt(gamma*R)*a*b*c
+    Astar = P/R*A*np.sqrt(gamma*R)*a*b*d
 
     return Astar
