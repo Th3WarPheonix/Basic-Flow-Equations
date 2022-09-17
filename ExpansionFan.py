@@ -1,13 +1,7 @@
 
 """Module containing expansion fan equations e.g. property ratios acorss a fan, mach from PM function value"""
 
-import math
-
-# Constants
-Ru = 8.314 # J/mol-K Universal Gas Constant
-Avo = 6.02214076e23 # mol^−1 Avogadro's Number
-Boltz = 1.380649e-23 # J/K Boltzmann Constant
-Euler = 2.71828182845904523536 # Euler's number
+import numpy as np
 
 def press_ratio_ExpFan(M1, M2, gamma=1.4):
     """Returns P2/P1"""
@@ -25,40 +19,40 @@ def temp_ratio_ExpFan(M1, M2, gamma=1.4):
 
 def PranMeyer(M1, gamma=1.4, deg=True):
     """Returns the PM function based on incident mach number"""
-    A = math.sqrt((gamma+1)/(gamma-1))
-    B = math.atan(math.sqrt((gamma-1)/(gamma+1)*(M1**2-1)))
-    C = math.atan(math.sqrt(M1**2-1))
+    A = np.sqrt((gamma+1)/(gamma-1))
+    B = np.atan(np.sqrt((gamma-1)/(gamma+1)*(M1**2-1)))
+    C = np.atan(np.sqrt(M1**2-1))
     # Search Prandtl-Meyer Function
     nu = (A*B-C)
 
     if deg:
-        nu = nu*180/math.pi
+        nu = nu*180/np.pi
 
     return nu
 
 def inv_PranMeyer(v, deg=True, gamma=1.4):
     """Returns the Mach number at which the given value of the Prandtl-Meyer function occurs (given in degrees by default)"""
-    a = math.sqrt((gamma+1)/(gamma-1))
+    a = np.sqrt((gamma+1)/(gamma-1))
 
     if deg: # Converting to radians for trig functions
-        v *= math.pi/180
+        v *= np.pi/180
 
-    if v > math.pi/2*(a-1): # max nu
+    if v > np.pi/2*(a-1): # max nu
         print('Given value of nu exceeds max value of nu')
         return None
 
     M = 1.3 
-    M_next = (a**2-1) /((math.pi/2)*(a-1)-v) # Initial guess
+    M_next = (a**2-1) /((np.pi/2)*(a-1)-v) # Initial guess
 
     precision = 1e-10
     while abs(M-M_next)>precision:
         
         M = M_next
-        A = a*math.atan(a**-1*math.sqrt(M**2-1)) # 1st part PM function
-        B = math.atan(math.sqrt(M**2-1)) # 2nd part PM function
-        C = (M*(gamma+1)/((gamma*M**2-M**2+2)*math.sqrt(M**2-1))) # 1st part PM function 
+        A = a*np.atan(a**-1*np.sqrt(M**2-1)) # 1st part PM function
+        B = np.atan(np.sqrt(M**2-1)) # 2nd part PM function
+        C = (M*(gamma+1)/((gamma*M**2-M**2+2)*np.sqrt(M**2-1))) # 1st part PM function 
 
-        D = 1/(M*math.sqrt(M**2-1)) # Derivative of 2nd part PM function
+        D = 1/(M*np.sqrt(M**2-1)) # Derivative of 2nd part PM function
 
         M_next = M - (A-B-v)/(C-D) # Newton-Raphson formula
         

@@ -1,33 +1,24 @@
 
 """Module containing oblique shock equations e.g. property ratios across a shock, wave angle from Mach number and deflection angle"""
 
-try:
-    import math
-    from IsentropicFlow import *
-except ModuleNotFoundError as e:
-    print(e)
-
-# Constants
-Ru = 8.314 # J/mol-K Universal Gas Constant
-Avo = 6.02214076e23 # mol^−1 Avogadro's Number
-Boltz = 1.380649e-23 # J/K Boltzmann Constant
-Euler = 2.71828182845904523536 # Euler's number
+import numpy as np
+import IsentropicFlow as IF
 
 def normal_mach1(M, beta):
     """Returns the mach number BEFORE an oblique shock normal to the oblique shock"""
-    Mn1 = M*math.sin(beta*math.pi/180)
+    Mn1 = M*np.sin(beta*np.pi/180)
     return Mn1
 
 def normal_mach2(Mn1, gamma=1.4):
     """Returns the mach number AFTER an oblique shock normal to the oblique shock"""
     top = Mn1**2+(2/(gamma-1))
     bottom = 2*gamma/(gamma-1)*Mn1**2-1
-    Mn2 = math.sqrt(top/bottom)
+    Mn2 = np.sqrt(top/bottom)
     return Mn2
 
 def Mach2(Mn2, beta, theta):
     """Returns mach number after oblique shock. Give all angles in degrees"""
-    M2 = Mn2/(math.sin((beta-theta)*math.pi/180))
+    M2 = Mn2/(np.sin((beta-theta)*np.pi/180))
     return M2
 
 def press_ratio_Oshock(Mn1, gamma=1.4):
@@ -56,14 +47,14 @@ def stagpress_ratio_Oshock(Mn1, gamma=1.4):
 def zero_OBM(theta, M1, gamma=1.4, n = 0):
     """Returns the wave angle from the deflection angle and incident mach number. Weak: n = 0 Strong: n = 1"""
     # derivation of equation found in link below
-    # https://www.mathworks.com/matlabcentral/fileexchange/32777-theta-beta-mach-analytic-relation
-    theta = theta*math.pi/180
-    mu = math.asin(1/M1)
-    c = math.tan(mu)**2
-    a = ((gamma-1)/2+(gamma+1)*c/2)*math.tan(theta)
-    b = ((gamma+1)/2+(gamma+3)*c/2)*math.tan(theta)
-    d = math.sqrt(4*(1-3*a*b)**3/((27*a**2*c+9*a*b-2)**2)-1)
-    beta = math.atan((b+9*a*c)/(2*(1-3*a*b))-(d*(27*a**2*c+9*a*b-2))/(6*a*(1-3*a*b))*math.tan(n*math.pi/3+1/3*math.atan(1/d)))*180/math.pi
+    # https://www.npworks.com/matlabcentral/fileexchange/32777-theta-beta-mach-analytic-relation
+    theta = theta*np.pi/180
+    mu = np.asin(1/M1)
+    c = np.tan(mu)**2
+    a = ((gamma-1)/2+(gamma+1)*c/2)*np.tan(theta)
+    b = ((gamma+1)/2+(gamma+3)*c/2)*np.tan(theta)
+    d = np.sqrt(4*(1-3*a*b)**3/((27*a**2*c+9*a*b-2)**2)-1)
+    beta = np.atan((b+9*a*c)/(2*(1-3*a*b))-(d*(27*a**2*c+9*a*b-2))/(6*a*(1-3*a*b))*np.tan(n*np.pi/3+1/3*np.atan(1/d)))*180/np.pi
 
     return beta
 
@@ -87,15 +78,15 @@ def solve_Oshock(M1, p1, T1, density1, theta, gamma=1.4):
     beta = zero_OBM(theta, M1, gamma)
     Mn1 = normal_mach1(M1, beta)
     p02p01, T2T1, rho2rho1, p2p1 = stagpress_ratio_Oshock(Mn1, gamma)
-    p01 = p0(p1, M1, gamma)
+    p01 = IF.p0(p1, M1, gamma)
     p02 = p02p01*p01
     p2 = p2p1*p1
     T2 = T2T1*T1
     density2 = rho2rho1*density1
     Mn2 = normal_mach2(Mn1, gamma)
     M2 = Mach2(Mn2, beta, theta)
-    T01 = T0(T1, M1, gamma)
-    T02 = T0(T2, M2, gamma)
+    T01 = IF.T0(T1, M1, gamma)
+    T02 = IF.T0(T2, M2, gamma)
     
     result = {}
     result['beta'] = beta

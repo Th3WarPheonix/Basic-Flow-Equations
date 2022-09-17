@@ -1,19 +1,13 @@
 
 """Module containing normal shock equations e.g. property ratios across a shock"""
 
-import math
-
-# Constants
-Ru = 8.314 # J/mol-K Universal Gas Constant
-Avo = 6.02214076e23 # mol^−1 Avogadro's Number
-Boltz = 1.380649e-23 # J/K Boltzmann Constant
-Euler = 2.71828182845904523536 # Euler's number
+import numpy as np
 
 def Mach2(M1, gamma=1.4):
     """Returns Mach number after a normal shock from incident Mach number"""
     top = (gamma-1)*M1**2+2
     bottom = 2*gamma*M1**2-(gamma-1)
-    M2 = math.sqrt(top/bottom)
+    M2 = np.sqrt(top/bottom)
     return M2
 
 def stag_pressure_ratio(M1, gamma=1.4):
