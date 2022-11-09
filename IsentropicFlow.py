@@ -30,3 +30,18 @@ def density(M, r0, gamma=1.4):
     """Returns static density from stagnation density"""
     rho0rho1 = (1 + (gamma-1)/2.0*M**2.0)**(1.0/(gamma-1))
     return rho0rho1**-1*r0
+
+def pRatio(M, gamma=1.4):
+    """Returns pressure ratio, P1/P0"""
+    P0P1 = (1 + (gamma-1)/2.0*M**2.0)**(gamma/(gamma-1))
+    return P0P1**-1
+
+def TRatio(M, gamma=1.4):
+    """Returns temperature ratio, T1/T0"""
+    T0T1 = (1 + (gamma-1)/2.0*M**2.0)
+    return T0T1**-1
+
+def densRatio(M, gamma=1.4):
+    """Returns stagnation density ratio, rho1/rho0"""
+    rho0rho1 = (1 + (gamma-1)/2.0*M**2.0)**(1.0/(gamma-1))
+    return rho0rho1**-1
