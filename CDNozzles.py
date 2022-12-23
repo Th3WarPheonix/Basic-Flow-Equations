@@ -3,8 +3,6 @@
 
 import numpy as np
 
-PRECISION = 1e-7
-
 def SonicTemperatureRatio(M, gamma=1.4):
     '''Returns T*/T from from incident Mach number'''
     top = 1+(gamma-1)/2*M**2
@@ -26,7 +24,7 @@ def SonicAreaRatio(M, gamma=1.4):
     AstarA = M*(top/bottom)**((gamma+1)/(2*(gamma-1)))
     return AstarA
 
-def MachfromAreaRatio(A, gamma=1.4, case=0):
+def MachfromAreaRatio(A, gamma=1.4, case=0, precision=1e-7):
     """Returns Mach number from area ration (A/A*)
     Supersonic solution: case = 0
     Subsonic solution: case = 1"""
@@ -46,7 +44,7 @@ def MachfromAreaRatio(A, gamma=1.4, case=0):
     X_new = 1/(1+r+np.sqrt(r*r+2*r))
     X = 0
     
-    while abs(X - X_new) > PRECISION: #Newton-raphson
+    while abs(X - X_new) > precision: #Newton-raphson
         X = X_new
 
         if case == 0: # Supersonic case
