@@ -6,21 +6,21 @@ import numpy as np
 PRECISION = 1e-7
 
 def SonicTemperatureRatio(M, gamma=1.4):
-    '''Returns T*/T from from incident Mach number'''
+    '''Returns T*/T from from Mach number'''
     top = 1+(gamma-1)/2*M**2
     bottom = (gamma+1)/2
     TstarT = (top/bottom)
     return TstarT
 
 def SonicPressureRatio(M, gamma=1.4):
-    '''Returns P*/P from incident Mach number'''
+    '''Returns P*/P from Mach number'''
     top = 1+(gamma-1)/2*M**2
     bottom = (gamma+1)/2
     PstarP = (top/bottom)**(gamma/(gamma-1))
     return PstarP
 
 def SonicAreaRatio(M, gamma=1.4):
-    '''Returns A*/A from incident Mach number'''
+    '''Returns A*/A from Mach number'''
     top = (gamma+1)/2
     bottom = 1+(gamma-1)/2*M**2
     AstarA = M*(top/bottom)**((gamma+1)/(2*(gamma-1)))
@@ -67,13 +67,19 @@ def MachfromAreaRatio(A, gamma=1.4, case=0):
     
     return M
 
-def find_Astar(P, P0, R, M, A, gamma=1.4):
-
-    a = (1+(gamma-1)/2*M**2)**.5
-    b = M/P0
+def find_Astar(Ps, Pt, M, area, gamma=1.4, R_gas=287.05):
+    """LOOKIN INTO DEPRECATION IF EQUATION IS NOT VERIFIED
+    Find throat area from static and total pressure"""
+    Tt = (1+(gamma-1)/2*M**2)**.5
+    b = M/Pt
     c = (gamma+1)/(gamma-1)
-    d = np.sqrt(gamma/R* (2/(gamma+1))**c)**-1
+    d = np.sqrt(gamma/R_gas*(2/(gamma+1))**c)**-1
 
-    Astar = P/R*A*np.sqrt(gamma*R)*a*b*d
+    Astar = Ps/R_gas*area*np.sqrt(gamma*R_gas)*Tt*b*d
 
     return Astar
+
+def massflow(Tt, Pt, area, gamma=1.4, R_gas=287.05):
+    """Returns the most amount of mass that can pass through a converging diverging nozzle"""
+    massflow = area*Pt/np.sqrt(gamma/R_gas/Tt)*((gamma+1)/2)**(-(gamma+1)/2/(gamma-1))
+    return massflow
