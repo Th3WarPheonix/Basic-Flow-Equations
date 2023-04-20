@@ -29,7 +29,8 @@ def SonicAreaRatio(M, gamma=1.4):
 def MachfromAreaRatio(A, gamma=1.4, case=0):
     """Returns Mach number from area ration (A/A*)
     Supersonic solution: case = 0
-    Subsonic solution: case = 1"""
+    Subsonic solution: case = 1
+    Source: https://www.grc.nasa.gov/www/winddocs/utilities/b4wind_guide/mach.html"""
 
     P = 2/(gamma+1)
     Q = 1 - P
@@ -67,6 +68,7 @@ def MachfromAreaRatio(A, gamma=1.4, case=0):
     return M
 
 def find_Astar(P, P0, R, M, A, gamma=1.4):
+
     a = (1+(gamma-1)/2*M**2)**.5
     b = M/P0
     c = (gamma+1)/(gamma-1)
