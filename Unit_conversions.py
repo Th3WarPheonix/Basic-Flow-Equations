@@ -1,188 +1,258 @@
 
 import numpy as np
 
-def convert_temperature(temps, to:str='K'):
+def convert_temperature(temps, units:str='K'):
     """Convert temperature between Kelvin and Rankine
-    to = 'K' for converting to Kelvin
-    to = 'R' for converting to Rankine"""
+    units = 'K' for converting to Kelvin
+    units = 'R' for converting to Rankine"""
     factor = 1.8
-    if to == 'R':
-        try:
-            temps *= factor
-            return temps
-        except:
-            return np.array(temps)*factor
-    elif to == 'K':
-        try:
-            temps = temps/factor
-            return temps
-        except:
-            return np.array(temps)/factor
-    else:
-        print('Did not convert temperature')
+    match units:
+        case 'R':
+            try:
+                temps *= factor
+                return temps
+            except:
+                return np.array(temps)*factor
+        case 'K':
+            try:
+                temps = temps/factor
+                return temps
+            except:
+                return np.array(temps)/factor
+        case _:
+            print('Did not convert temperature')
 
-def convert_mass(mass, to:str='kg'):
+def convert_mass(mass, units:str='kg'):
     """Convert mass between lbm and kg
-    to = 'lbm' for converting to lbm
-    to = 'kg' for converting to kg"""
+    units = 'lbm' for converting to lbm
+    units = 'kg' for converting to kg"""
     factor = 2.20462
-    if to == 'lbm':
-        try:
-            mass *= factor
-            return mass
-        except:
-            return np.array(mass)*factor
-    elif to == 'kg':
-        try:
-            mass = mass/factor
-            return mass
-        except:
-            return np.array(mass)/factor
-    else:
-        print('Did not convert mass')
+    match units:
+        case 'lbm':
+            try:
+                mass *= factor
+                return mass
+            except:
+                return np.array(mass)*factor
+        case 'kg':
+            try:
+                mass = mass/factor
+                return mass
+            except:
+                return np.array(mass)/factor
+        case _:
+            print('Did not convert mass')
 
-def convert_pressure(pressures, to:str='Pa'):
+def convert_pressure(pressures, units:str='Pa'):
     """Convert pressure between Pascals and PSI
-    to = 'Pa' for converting to Pascals
-    to = 'psi' for converting to PSI"""
+    units = 'Pa' for converting to Pascals
+    units = 'psi' for converting to PSI"""
     factor = 6895.0
-    if to == 'psi':
-        try:
-            pressures = pressures/factor
-            return pressures
-        except:
-            return np.array(pressures)/factor
-    elif to == 'Pa':
-        try:
-            pressures = pressures*factor
-            return pressures
-        except:
-            return np.array(pressures)*factor
-    else:
-        print('Did not convert pressure')
+    match units:
+        case 'psi':
+            try:
+                pressures = pressures/factor
+                return pressures
+            except:
+                return np.array(pressures)/factor
+        case 'Pa':
+            try:
+                pressures = pressures*factor
+                return pressures
+            except:
+                return np.array(pressures)*factor
+        case _:
+            print('Did not convert pressure')
 
-def convert_energy(energy, to:str='J'):
+def convert_energy(energy, units:str='J'):
     """Convert mass specific energy/work between Btu/lbm and J/kg
-    to = 'J' for converting to J/kg
-    to = 'BTU' for converting to BTU/lbm"""
+    units = 'J' for converting to J/kg
+    units = 'BTU' for converting to BTU/lbm"""
     factor = 1055 * 2.205
-    if to == 'BTU':
-        try:
-            energy = energy/factor
-            return energy
-        except:
-            return np.array(energy)/factor
-    elif to == 'J':
-        try:
-            energy = energy*factor
-            return energy
-        except:
-            return np.array(energy)*factor
-    else:
-        print('Did not convert energy')
+    match units:
+        case 'BTU':
+            try:
+                energy = energy/factor
+                return energy
+            except:
+                return np.array(energy)/factor
+        case 'J':
+            try:
+                energy = energy*factor
+                return energy
+            except:
+                return np.array(energy)*factor
+        case _:
+            print('Did not convert energy')
 
-def convert_force(force, to:str='N'):
+def convert_force(force, units:str='N'):
     """Convert force between Newtons and lbf
-    to = 'N' for converting to Newtons
-    to = 'lbf' for converting to lbf"""
+    units = 'N' for converting to Newtons
+    tunitso = 'lbf' for converting to lbf"""
     factor = 4.44822
-    if to == 'lbf':
-        try:
-            force = force/factor
-            return force
-        except:
-            return np.array(force)/factor
-    elif to == 'N':
-        try:
-            force = force*factor
-            return force
-        except:
-            return np.array(force)*factor
-    else:
-        print('Did not convert force')
+    match units:
+        case 'lbf':
+            try:
+                force = force/factor
+                return force
+            except:
+                return np.array(force)/factor
+        case 'N':
+            try:
+                force = force*factor
+                return force
+            except:
+                return np.array(force)*factor
+        case _:
+            print('Did not convert force')
 
-def convert_length(length, to:str='m', from:str='in'):
+def convert_length(length, units:str='m in'):
     """Convert length from meters to inches or meters to feet NOT between feet and inches
-    to = 'm' for converting to meters
-    to = 'in' for converting to inches
-    to = 'ft' for converting to feet"""
+    units = 'm in' for converting to meters from inches
+    units = 'm ft' for converting to meters from feet
+    units = 'in' for converting to inches
+    units = 'ft' for converting to feet"""
     factor1 = .0254
     factor2 = .0254*12
-    if to == 'm':
-        try:
-            length = length/factor1
-            return length
-        except:
-            return np.array(length)/factor1
-    elif to == 'in':
-        try:
-            length = length*factor1
-            return length
-        except:
-            return np.array(length)*factor1
-    elif to == 'ft':
-        try:
-            length = length*factor2
-            return length
-        except:
-            return np.array(length)*factor2
-    else:
-        print('Did not convert length')
+    match units:
+        case 'm in':
+            try:
+                length = length/factor1
+                return length
+            except:
+                return np.array(length)/factor1
+        case 'm ft':
+            try:
+                length = length/factor2
+                return length
+            except:
+                return np.array(length)/factor2
+        case 'in':
+            try:
+                length = length*factor1
+                return length
+            except:
+                return np.array(length)*factor1
+        case 'ft':
+            try:
+                length = length*factor2
+                return length
+            except:
+                return np.array(length)*factor2
+        case _:
+            print('Did not convert length')
 
-def convert_area(area, to:str='SI'):
+def convert_area(area, units:str='m in'):
     """Convert length from sq meters to sq inches or sq meters to sq feet NOT between sq feet and sq inches
-    to = 'm' for converting to sq meters
-    to = 'in' for converting to sq inches
-    to = 'ft' for converting to sq feet"""
+    units = 'm in' for converting to sq meters from sq inches
+    units = 'm ft' for converting to sq meters from sq feet
+    units = 'in' for converting to sq inches
+    units = 'ft' for converting to sq feet"""
     factor1 = .0254**2
     factor2 = (.0254*12)**2
-    if to == 'm':
-        try:
-            area = area/factor1
-            return area
-        except:
-            return np.array(area)/factor1
-    elif to == 'in':
-        try:
-            area = area*factor1
-            return area
-        except:
-            return np.array(area)*factor1
-    elif to == 'ft':
-        try:
-            area = area*factor2
-            return area
-        except:
-            return np.array(area)*factor2
-    else:
-        print('Did not convert area')
+    match units:
+        case 'm in':
+            try:
+                area = area/factor1
+                return area
+            except:
+                return np.array(area)/factor1
+        case 'm ft':
+            try:
+                area = area/factor2
+                return area
+            except:
+                return np.array(area)/factor2
+        case 'in':
+            try:
+                area = area*factor1
+                return area
+            except:
+                return np.array(area)*factor1
+        case 'ft':
+            try:
+                area = area*factor2
+                return area
+            except:
+                return np.array(area)*factor2
+        case _:
+            print('Did not convert area')
 
-def convert_speed(speed, to:str='SI'):
+def convert_speed(speed, units:str='m in'):
     """Convert length from meters/sec to inches/sec or meters/sec to feet/sec NOT between feet and inches
-    to = 'm' for converting to meters/sec
-    to = 'in' for converting to inches/sec
-    to = 'ft' for converting to feet/sec"""
-    factor1 = .0254**2
-    factor2 = (.0254*12)**2
-    if to == 'm':
-        try:
-            speed = speed/factor1
-            return speed
-        except:
-            return np.array(speed)/factor1
-    elif to == 'in':
-        try:
-            speed = speed*factor1
-            return speed
-        except:
-            return np.array(speed)*factor1
-    elif to == 'ft':
-        try:
-            speed = speed*factor2
-            return speed
-        except:
-            return np.array(speed)*factor2
-    else:
-        print('Did not convert speed')
+    \nunits = 'm in' for converting to meters/sec from inches/sec
+    \nunits = 'm ft' for converting to meters/sec from ft/sec
+    \nunits = 'in' for converting to inches/sec
+    \nunits = 'ft' for converting to feet/sec
+    \nunits = 'mph m' for converting to mph to meters/sec
+    \nunits = 'mph ft' for converting to mph to feet/sec
+    """
+    factor1 = .0254**2 # m/s to in/s
+    factor2 = .0254*12 # m/s to ft/s
+    factor3 = 5280/3600 # mph to ft/s
+    factor4 = 5280/3600*12 # mph to in/s
+    match units:
+        case 'm in':
+            try:
+                speed = speed/factor1
+                return speed
+            except:
+                return np.array(speed)/factor1
+        case 'm ft':
+            try:
+                speed = speed/factor2
+                return speed
+            except:
+                return np.array(speed)/factor2
+        case 'in':
+            try:
+                speed = speed*factor1
+                return speed
+            except:
+                return np.array(speed)*factor1
+        case 'ft':
+            try:
+                speed = speed*factor2
+                return speed
+            except:
+                return np.array(speed)*factor2
+        case 'mph ft':
+            try:
+                speed = speed*factor3
+                return speed
+            except:
+                return np.array(speed)*factor3
+        case 'mph m':
+            try:
+                speed = speed*factor3*factor2
+                return speed
+            except:
+                return np.array(speed)*factor3*factor2
+        case 'mph in':
+            try:
+                speed = speed*factor4
+                return speed
+            except:
+                return np.array(speed)*factor4
+        case 'ft mph':
+            try:
+                speed = speed/factor3
+                return speed
+            except:
+                return np.array(speed)/factor3
+        case 'm mph':
+            try:
+                speed = speed/factor3/factor2
+                return speed
+            except:
+                return np.array(speed)/factor3/factor2
+        case 'in mph':
+            try:
+                speed = speed/factor4
+                return speed
+            except:
+                return np.array(speed)/factor4
+        case _:
+            print('Did not convert speed')
 
 
