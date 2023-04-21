@@ -185,12 +185,13 @@ def convert_speed(speed, units:str='m in'):
     \nunits = 'in' for converting to inches/sec
     \nunits = 'ft' for converting to feet/sec
     \nunits = 'mph m' for converting to mph to meters/sec
-    \nunits = 'mph ft' for converting to mph to feet/sec
+    \nunits = 'kts mph' for converting to knots to mph
     """
     factor1 = .0254**2 # m/s to in/s
     factor2 = .0254*12 # m/s to ft/s
     factor3 = 5280/3600 # mph to ft/s
     factor4 = 5280/3600*12 # mph to in/s
+    factor5 = 1.150779 # knots to mph
     match units:
         case 'm in':
             try:
@@ -252,6 +253,18 @@ def convert_speed(speed, units:str='m in'):
                 return speed
             except:
                 return np.array(speed)/factor4
+        case 'mph kts':
+            try:
+                speed = speed/factor5
+                return speed
+            except:
+                return np.array(speed)/factor5
+        case 'kts mph':
+            try:
+                speed = speed*factor5
+                return speed
+            except:
+                return np.array(speed)*factor5
         case _:
             print('Did not convert speed')
 
