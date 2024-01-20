@@ -4,7 +4,7 @@ a shock"""
 
 import numpy as np
 
-def Mach2(M1, gamma=1.4):
+def mach2(M1, gamma=1.4):
     """Returns Mach number after a normal shock from incident Mach number"""
     top = (gamma-1)*M1**2+2
     bottom = 2*gamma*M1**2-(gamma-1)
@@ -48,10 +48,9 @@ def solve_Nshock(M1, gamma=1.4):
 
     Dictionary Keys
     ---------------
-    'M2' 'P1P01' 'T1T01' 'rho1rho01' 'P2P02' 'T2T02'
-    'rho2rho02' 'P02P01' 'P2P1' 'T2T1' 'rho2rho1'
+    'M2' 'Pt2Pt1' 'Ps2Ps1' 'T2T1' 'Ds2Ds1'
     """
-    M2 = Mach2(M1, gamma)
+    M2 = mach2(M1, gamma)
 
     P02P01 = total_pressure_ratio(M1, gamma)
     P2P1 = pressure_ratio(M1, gamma)
@@ -60,10 +59,10 @@ def solve_Nshock(M1, gamma=1.4):
 
     result = {}
     result['M2'] = M2
-    result['P02P01'] = P02P01
-    result['P2P1'] = P2P1
-    result['T2T1'] = T2T1
-    result['rho2rho1'] = rho2rho1
+    result['Pt2Pt1'] = P02P01
+    result['Ps2Ps1'] = P2P1
+    result['Ts2Ts1'] = T2T1
+    result['Ds2Ds1'] = rho2rho1
 
     return result
 

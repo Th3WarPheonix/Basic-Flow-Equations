@@ -36,46 +36,82 @@ def density_ratio(Mn1, gamma=1.4):
     return rho2rho1
 
 def temperature_ratio(Mn1, gamma=1.4):
-    """Returns T2/T1, rho2/rho1, P2/P1"""
-    p2p1 = pressure_ratio(Mn1, gamma)
-    rho2rho1 = density_ratio(Mn1, gamma)
-    T2T1 = p2p1*rho2rho1**-1
-    return T2T1, rho2rho1, p2p1
+    """Returns T2/T1"""
+    T2T1 = (2*gamma*Mn1**2-(gamma-1))*((gamma-1)*Mn1**2+2)/((gamma+1)**2*Mn1**2)
+    return T2T1
 
 def total_pressure_ratio(Mn1, gamma=1.4):
     """Returns P02/P01, T2/T1, rho2/rho1, P2/P1"""
-    T2T1, rho2rho1, p2p1 = temperature_ratio(Mn1, gamma)
-    P02P01 = p2p1*(T2T1**-1)**(gamma/(gamma-1))
-    return P02P01, T2T1, rho2rho1, p2p1
+    P02P01 = (((gamma+1)*Mn1**2/((gamma-1)*Mn1**2+2))**(gamma/(gamma-1))*
+    ((gamma+1)/(2*gamma*Mn1**2-gamma+1))**(1/(gamma-1)))
+    return P02P01
 
-def zero_OBM(theta, M1, gamma=1.4, n = 0):
+def wave_angle(theta, M1, gamma=1.4, n=0):
     """Returns the wave angle from the deflection angle and incident
-    mach number. Weak: n = 0 Strong: n = 1"""
-    # derivation of equation found in link below
-    # https://www.npworks.com/matlabcentral/fileexchange/32777-theta-beta-mach-analytic-relation
+    mach number. Weak: n = 0 Strong: n = 1
+    Derivation of equation found in link below zeros the theta-beta-mach equation
+    https://www.npworks.com/matlabcentral/fileexchange/32777-theta-beta-mach-analytic-relation"""
+
     theta = theta*np.pi/180
-    mu = np.asin(1/M1)
+    mu = np.arcsin(1/M1)
     c = np.tan(mu)**2
     a = ((gamma-1)/2+(gamma+1)*c/2)*np.tan(theta)
     b = ((gamma+1)/2+(gamma+3)*c/2)*np.tan(theta)
     d = np.sqrt(4*(1-3*a*b)**3/((27*a**2*c+9*a*b-2)**2)-1)
-    beta = np.atan((b+9*a*c)/(2*(1-3*a*b))-
+    beta = np.arctan((b+9*a*c)/(2*(1-3*a*b))-
                    (d*(27*a**2*c+9*a*b-2))/(6*a*(1-3*a*b))*
-                   np.tan(n*np.pi/3+1/3*np.atan(1/d)))*180/np.pi
+                   np.tan(n*np.pi/3+1/3*np.arctan(1/d)))*180/np.pi
 
     return beta
 
-def solve(M1, p1, T1, density1, theta, gamma=1.4):
+def deflection_angle(M1, waveangle, gamma=1.4):
+    top = (gamma+1)*M1**2
+    bottom = 2*(M1**2*np.sin(waveangle)*np.sin(waveangle)-1)
+    cota = np.tan(waveangle)*(top/bottom-1)
+    dangle = np.arctan(1/cota)
+    return dangle
+
+def ratio_solve(M1, theta, gamma=1.4):
+    """Returns dictionary of all property ratios of the oblique shock
+    from incident Mach number and turn angle
+
+    Dictionary Keys
+    ---------------
+    'beta' 'Mn2' 'M2' 'Pt2Pt1' 'Ps2Ps1' 'Ts2Ts1' 'Ds2Ds1'"""
+    beta = wave_angle(theta, M1, gamma)
+    Mn1 = normal_mach1(M1, beta)
+    T2T1 = temperature_ratio(Mn1, gamma)
+    rho2rho1 = density_ratio(Mn1, gamma)
+    p2p1 = pressure_ratio(Mn1, gamma)
+    p02p01 = total_pressure_ratio(Mn1, gamma)
+    Mn2 = normal_mach2(Mn1, gamma)
+    M2 = mach2(Mn2, beta, theta)
+    
+    result = {}
+    result['beta'] = beta
+    result['Mn2'] = Mn2
+    result['M2'] = M2
+    result['Pt2Pt1'] = p02p01
+    result['Ps2Ps1'] = p2p1
+    result['Ts2Ts1'] = T2T1
+    result['Ds2Ds1'] = rho2rho1
+    
+    return result
+
+def complete_solve(M1, p1, T1, density1, theta, gamma=1.4):
     """Returns dictionary of all calculated values of the oblique shock
-    from incident Mach number, pressure and temperature
+    from incident Mach number, turn angle, pressure, temperature, density
 
     Dictionary Keys
     ---------------
     'beta' 'p2' 'T2' 'density1' 'density2' 'Mn1' 'Mn2'
     'M2' 'p01' 'p02' 'T01' 'T02'"""
-    beta = zero_OBM(theta, M1, gamma)
+    beta = wave_angle(theta, M1, gamma)
     Mn1 = normal_mach1(M1, beta)
-    p02p01, T2T1, rho2rho1, p2p1 = total_pressure_ratio(Mn1, gamma)
+    T2T1 = temperature_ratio(Mn1, gamma)
+    rho2rho1 = density_ratio(Mn1, gamma)
+    p2p1 = pressure_ratio(Mn1, gamma)
+    p02p01 = total_pressure_ratio(Mn1, gamma)
     p01 = isenflow.total_pressure(p1, M1, gamma)
     p02 = p02p01*p01
     p2 = p2p1*p1
@@ -102,7 +138,7 @@ def solve(M1, p1, T1, density1, theta, gamma=1.4):
     
     return result
 
-def print_solve(result, decimals=4, state1='1', state2='2'):
+def print_csolve(result, decimals=4, state1='1', state2='2'):
     """Prints out ouput of solve in a structured manner using SI
     units"""
 
