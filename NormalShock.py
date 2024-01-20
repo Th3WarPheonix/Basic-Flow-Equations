@@ -1,5 +1,6 @@
 
-"""Module containing normal shock equations e.g. property ratios across a shock"""
+"""Module containing normal shock equations e.g. property ratios across
+a shock"""
 
 import numpy as np
 
@@ -10,7 +11,7 @@ def Mach2(M1, gamma=1.4):
     M2 = np.sqrt(top/bottom)
     return M2
 
-def stag_pressure_ratio(M1, gamma=1.4):
+def total_pressure_ratio(M1, gamma=1.4):
     """Returns P02/P01 through a normal shock from incident Mach number"""
     top1 = (gamma+1)*M1**2
     bottom1 = (gamma-1)*M1**2+2
@@ -42,25 +43,17 @@ def density_ratio(M, gamma=1.4):
     return rho2rho1
 
 def solve_Nshock(M1, gamma=1.4):
-    """Returns dictionary of ratios of perintent values across the normal shock from incident Mach number
+    """Returns dictionary of ratios of pertinent values across the
+    normal shock from incident Mach number
 
     Dictionary Keys
     ---------------
-    'M2'\n
-    'P1P01'\n
-    'T1T01'\n
-    'rho1rho01'\n
-    'P2P02'\n
-    'T2T02'\n
-    'rho2rho02'\n
-    'P02P01'\n
-    'P2P1'\n
-    'T2T1'\n
-    'rho2rho1'\n
+    'M2' 'P1P01' 'T1T01' 'rho1rho01' 'P2P02' 'T2T02'
+    'rho2rho02' 'P02P01' 'P2P1' 'T2T1' 'rho2rho1'
     """
     M2 = Mach2(M1, gamma)
 
-    P02P01 = stag_pressure_ratio(M1, gamma)
+    P02P01 = total_pressure_ratio(M1, gamma)
     P2P1 = pressure_ratio(M1, gamma)
     T2T1 = temperature_ratio(M1, gamma)
     rho2rho1 = density_ratio(M1, gamma)
@@ -75,7 +68,8 @@ def solve_Nshock(M1, gamma=1.4):
     return result
 
 def print_solve_Nshock(result, decimals=4):
-    """Prints out ouput of solve_Nshock in a structured manner using SI units"""
+    """Prints out ouput of solve_Nshock in a structured manner using SI
+    units"""
 
     print('Mach number after shock', round(result['M2'], decimals))
     print('Stagnation pressure ratio (P02/P01)', round(result['P02P01'], decimals))

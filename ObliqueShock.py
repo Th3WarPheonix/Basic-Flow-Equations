@@ -1,51 +1,56 @@
 
-"""Module containing oblique shock equations e.g. property ratios across a shock, wave angle from Mach number and deflection angle"""
+"""Module containing oblique shock equations e.g. property ratios across
+a shock, wave angle from Mach number and deflection angle"""
 
 import numpy as np
-import IsentropicFlow as IF
+import IsentropicFlow as isenflow
 
 def normal_mach1(M, beta):
-    """Returns the mach number BEFORE an oblique shock normal to the oblique shock"""
+    """Returns the mach number BEFORE an oblique shock normal to the
+    oblique shock"""
     Mn1 = M*np.sin(beta*np.pi/180)
     return Mn1
 
 def normal_mach2(Mn1, gamma=1.4):
-    """Returns the mach number AFTER an oblique shock normal to the oblique shock"""
+    """Returns the mach number AFTER an oblique shock normal to the
+    oblique shock"""
     top = Mn1**2+(2/(gamma-1))
     bottom = 2*gamma/(gamma-1)*Mn1**2-1
     Mn2 = np.sqrt(top/bottom)
     return Mn2
 
-def Mach2(Mn2, beta, theta):
-    """Returns mach number after oblique shock. Give all angles in degrees"""
+def mach2(Mn2, beta, theta):
+    """Returns mach number after an oblique shock. Give all angles in
+    degrees"""
     M2 = Mn2/(np.sin((beta-theta)*np.pi/180))
     return M2
 
-def press_ratio_Oshock(Mn1, gamma=1.4):
+def pressure_ratio(Mn1, gamma=1.4):
     """Returns P2/P1"""
     p2p1 = 1 + 2*gamma/(gamma+1)*(Mn1**2-1)
     return p2p1
 
-def dens_ratio_Oshock(Mn1, gamma=1.4):
+def density_ratio(Mn1, gamma=1.4):
     """Returns rho2/rho1"""
     rho2rho1 = (gamma+1)*Mn1**2/((gamma-1)*Mn1**2+2)
     return rho2rho1
 
-def temp_ratio_Oshock(Mn1, gamma=1.4):
+def temperature_ratio(Mn1, gamma=1.4):
     """Returns T2/T1, rho2/rho1, P2/P1"""
-    p2p1 = press_ratio_Oshock(Mn1, gamma)
-    rho2rho1 = dens_ratio_Oshock(Mn1, gamma)
+    p2p1 = pressure_ratio(Mn1, gamma)
+    rho2rho1 = density_ratio(Mn1, gamma)
     T2T1 = p2p1*rho2rho1**-1
     return T2T1, rho2rho1, p2p1
 
-def stagpress_ratio_Oshock(Mn1, gamma=1.4):
+def total_pressure_ratio(Mn1, gamma=1.4):
     """Returns P02/P01, T2/T1, rho2/rho1, P2/P1"""
-    T2T1, rho2rho1, p2p1 = temp_ratio_Oshock(Mn1, gamma)
+    T2T1, rho2rho1, p2p1 = temperature_ratio(Mn1, gamma)
     P02P01 = p2p1*(T2T1**-1)**(gamma/(gamma-1))
     return P02P01, T2T1, rho2rho1, p2p1
 
 def zero_OBM(theta, M1, gamma=1.4, n = 0):
-    """Returns the wave angle from the deflection angle and incident mach number. Weak: n = 0 Strong: n = 1"""
+    """Returns the wave angle from the deflection angle and incident
+    mach number. Weak: n = 0 Strong: n = 1"""
     # derivation of equation found in link below
     # https://www.npworks.com/matlabcentral/fileexchange/32777-theta-beta-mach-analytic-relation
     theta = theta*np.pi/180
@@ -54,39 +59,32 @@ def zero_OBM(theta, M1, gamma=1.4, n = 0):
     a = ((gamma-1)/2+(gamma+1)*c/2)*np.tan(theta)
     b = ((gamma+1)/2+(gamma+3)*c/2)*np.tan(theta)
     d = np.sqrt(4*(1-3*a*b)**3/((27*a**2*c+9*a*b-2)**2)-1)
-    beta = np.atan((b+9*a*c)/(2*(1-3*a*b))-(d*(27*a**2*c+9*a*b-2))/(6*a*(1-3*a*b))*np.tan(n*np.pi/3+1/3*np.atan(1/d)))*180/np.pi
+    beta = np.atan((b+9*a*c)/(2*(1-3*a*b))-
+                   (d*(27*a**2*c+9*a*b-2))/(6*a*(1-3*a*b))*
+                   np.tan(n*np.pi/3+1/3*np.atan(1/d)))*180/np.pi
 
     return beta
 
-def solve_Oshock(M1, p1, T1, density1, theta, gamma=1.4):
-    """Returns dictionary of all calculated values of the oblique shock from incident Mach number, pressure and temperature
+def solve(M1, p1, T1, density1, theta, gamma=1.4):
+    """Returns dictionary of all calculated values of the oblique shock
+    from incident Mach number, pressure and temperature
 
     Dictionary Keys
     ---------------
-    'beta'\n
-    'p2'\n
-    'T2'\n
-    'density1'\n
-    'density2'\n
-    'Mn1'\n
-    'Mn2'\n
-    'M2'\n
-    'p01'\n
-    'p02'\n
-    'T01'\n
-    'T02'"""
+    'beta' 'p2' 'T2' 'density1' 'density2' 'Mn1' 'Mn2'
+    'M2' 'p01' 'p02' 'T01' 'T02'"""
     beta = zero_OBM(theta, M1, gamma)
     Mn1 = normal_mach1(M1, beta)
-    p02p01, T2T1, rho2rho1, p2p1 = stagpress_ratio_Oshock(Mn1, gamma)
-    p01 = IF.p0(p1, M1, gamma)
+    p02p01, T2T1, rho2rho1, p2p1 = total_pressure_ratio(Mn1, gamma)
+    p01 = isenflow.total_pressure(p1, M1, gamma)
     p02 = p02p01*p01
     p2 = p2p1*p1
     T2 = T2T1*T1
     density2 = rho2rho1*density1
     Mn2 = normal_mach2(Mn1, gamma)
-    M2 = Mach2(Mn2, beta, theta)
-    T01 = IF.T0(T1, M1, gamma)
-    T02 = IF.T0(T2, M2, gamma)
+    M2 = mach2(Mn2, beta, theta)
+    T01 = isenflow.total_temperature(T1, M1, gamma)
+    T02 = isenflow.total_temperature(T2, M2, gamma)
     
     result = {}
     result['beta'] = beta
@@ -104,8 +102,9 @@ def solve_Oshock(M1, p1, T1, density1, theta, gamma=1.4):
     
     return result
 
-def print_solve_Oshock(result, decimals=4, state1='1', state2='2'):
-    """Prints out ouput of solve_Oshock in a structured manner using SI units """
+def print_solve(result, decimals=4, state1='1', state2='2'):
+    """Prints out ouput of solve in a structured manner using SI
+    units"""
 
     print('Properties for states {} and {}'.format(state1, state2))
     print('Beta', round(result['beta'], decimals))
