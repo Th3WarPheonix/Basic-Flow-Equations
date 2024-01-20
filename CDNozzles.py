@@ -4,6 +4,8 @@ ratios to sonic velocity values, Mach number from area ratio"""
 
 import numpy as np
 
+PRECISION = 1e-7
+
 def SonicTemperatureRatio(M, gamma=1.4):
     """Returns T*/T from from incident Mach number"""
     top = 1+(gamma-1)/2*M**2
@@ -19,7 +21,7 @@ def SonicPressureRatio(M, gamma=1.4):
     return PstarP
 
 def SonicAreaRatio(M, gamma=1.4):
-    """Returns A*/A from incident Mach number"""
+    '''Returns A*/A from incident Mach number'''
     top = (gamma+1)/2
     bottom = 1+(gamma-1)/2*M**2
     AstarA = M*(top/bottom)**((gamma+1)/(2*(gamma-1)))
@@ -47,7 +49,7 @@ def MachfromAreaRatio(A, gamma=1.4, case=0, precision=1e-7):
     X_new = 1/(1+r+np.sqrt(r*r+2*r))
     X = 0
     
-    while abs(X - X_new) > precision: #Newton-raphson
+    while abs(X - X_new) > PRECISION: #Newton-raphson
         X = X_new
 
         if case == 0: # Supersonic case
@@ -67,20 +69,15 @@ def MachfromAreaRatio(A, gamma=1.4, case=0, precision=1e-7):
     
     return M
 
-def find_Astar(Ps, Pt, M, area, gamma=1.4, Rgas=287.05):
+def find_Astar(Ps, Pt, M, area, gamma=1.4, R_gas=287.05):
     """LOOKIN INTO DEPRECATION IF EQUATION IS NOT VERIFIED
-    Find the value at which the flow is choked.
-    P  : static pressure
-    Pt : total pressure
-    M  : mach number
-    A  : area
-    R  : specific gas constant"""
-    a = (1+(gamma-1)/2*M**2)**.5
+    Find throat area from static and total pressure"""
+    Tt = (1+(gamma-1)/2*M**2)**.5
     b = M/Pt
     c = (gamma+1)/(gamma-1)
-    d = np.sqrt(gamma/Rgas* (2/(gamma+1))**c)**-1
+    d = np.sqrt(gamma/R_gas*(2/(gamma+1))**c)**-1
 
-    Astar = Ps/Rgas*area*np.sqrt(gamma*Rgas)*a*b*d
+    Astar = Ps/R_gas*area*np.sqrt(gamma*R_gas)*Tt*b*d
 
     return Astar
 
@@ -88,6 +85,3 @@ def massflow(Tt, Pt, area, gamma=1.4, R_gas=287.05):
     """Returns the most amount of mass that can pass through a converging diverging nozzle"""
     massflow = area*Pt/np.sqrt(gamma/R_gas/Tt)*((gamma+1)/2)**(-(gamma+1)/2/(gamma-1))
     return massflow
-
-def shock_location():
-    pass

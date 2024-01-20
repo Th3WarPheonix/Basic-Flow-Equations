@@ -2,6 +2,8 @@
 stagnation temrperature from Mach number and pressure and vice versa,
 for all properties"""
 
+"""Module containing basic isentropic flow relation equations e.g. stagnation temrperature from Mach number and pressure and vice versa, for all properties"""
+
 def total_pressure(M, p, gamma=1.4):
     """Returns stagnation pressure from static pressure"""
     P0P1 = (1 + (gamma-1)/2.0*M**2.0)**(gamma/(gamma-1))
