@@ -259,7 +259,6 @@ def rungekutta(N, n, f, w1, w2, step):
     
     return n, f, w1, w2
 
-
 def incompressible_solve(precision=1e-6):
     step = .4
     stop = 10
