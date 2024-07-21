@@ -35,7 +35,8 @@ def plotProps():
     ax1.set_ylabel(Y_LABEL)
     #ax1.set_xlabel("Temperatures ($K$)", color=AX1_COLOR, loc='left')
     ax1.set_xticks(np.linspace(min(temperatures), max(temperatures), 10))
-    ax1.set_xticklabels(np.around(np.linspace(min(temperatures), max(temperatures), 10), 0)) # Allows user to arbitrarily set axis tick values, therefore they show up rounded when in reality they are not (comment out ths line to see what happens)
+    # Allows user to arbitrarily set axis tick values, therefore they show up rounded when in reality they are not (comment out ths line to see what happens)
+    ax1.set_xticklabels(np.around(np.linspace(min(temperatures), max(temperatures), 10), 0))
     ax1.tick_params(axis='x', colors=AX1_COLOR, zorder=0)
     ax1.margins(x=X_MARGINS)
 

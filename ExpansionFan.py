@@ -1,5 +1,6 @@
 
-"""Module containing expansion fan equations e.g. property ratios acorss a fan, mach from PM function value"""
+"""Module containing expansion fan equations e.g. property ratios acorss
+a fan, mach from PM function value"""
 
 import numpy as np
 

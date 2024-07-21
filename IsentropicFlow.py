@@ -1,5 +1,7 @@
 
-"""Module containing basic isentropic flow relation equations e.g. stagnation temrperature from Mach number and pressure and vice versa, for all properties"""
+"""Module containing basic isentropic flow relation equations e.g.
+stagnation temrperature from Mach number and pressure and vice versa,
+for all properties"""
 
 def total_pressure(M, p, gamma=1.4):
     """Returns stagnation pressure from static pressure"""

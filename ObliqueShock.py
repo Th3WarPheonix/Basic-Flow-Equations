@@ -1,23 +1,33 @@
 
-"""Module containing oblique shock equations e.g. property ratios across a shock, wave angle from Mach number and deflection angle"""
+"""
+Module containing oblique shock equations e.g. property ratios across
+a shock, wave angle from Mach number and deflection angle
+Beta is wave angle
+Theta is deflection angle
+All angles input as degrees and returned as degrees
+"""
 
 import numpy as np
 import IsentropicFlow as IF
+import matplotlib.pyplot as plt
 
 def normal_mach1(M, beta):
-    """Returns the mach number BEFORE an oblique shock normal to the oblique shock"""
+    """Returns the mach number BEFORE an oblique shock normal to the
+    oblique shock"""
     Mn1 = M*np.sin(beta*np.pi/180)
     return Mn1
 
 def normal_mach2(Mn1, gamma=1.4):
-    """Returns the mach number AFTER an oblique shock normal to the oblique shock"""
+    """Returns the mach number AFTER an oblique shock normal to the
+    oblique shock"""
     top = Mn1**2+(2/(gamma-1))
     bottom = 2*gamma/(gamma-1)*Mn1**2-1
     Mn2 = np.sqrt(top/bottom)
     return Mn2
 
 def Mach2(Mn2, beta, theta):
-    """Returns mach number after oblique shock. Give all angles in degrees"""
+    """Returns mach number after oblique shock. Give all angles in
+    degrees"""
     M2 = Mn2/(np.sin((beta-theta)*np.pi/180))
     return M2
 
@@ -45,36 +55,106 @@ def stagpress_ratio_Oshock(Mn1, gamma=1.4):
     return P02P01, T2T1, rho2rho1, p2p1
 
 def zero_OBM(theta, M1, gamma=1.4, n = 0):
-    """Returns the wave angle from the deflection angle and incident mach number. Weak: n = 0 Strong: n = 1"""
+    """Returns the wave angle from the deflection angle and incident
+    mach number. Weak: n = 0 Strong: n = 1"""
     # derivation of equation found in link below
     # https://www.npworks.com/matlabcentral/fileexchange/32777-theta-beta-mach-analytic-relation
     theta = theta*np.pi/180
-    mu = np.asin(1/M1)
+    mu = np.arcsin(1/M1)
     c = np.tan(mu)**2
     a = ((gamma-1)/2+(gamma+1)*c/2)*np.tan(theta)
     b = ((gamma+1)/2+(gamma+3)*c/2)*np.tan(theta)
     d = np.sqrt(4*(1-3*a*b)**3/((27*a**2*c+9*a*b-2)**2)-1)
-    beta = np.atan((b+9*a*c)/(2*(1-3*a*b))-(d*(27*a**2*c+9*a*b-2))/(6*a*(1-3*a*b))*np.tan(n*np.pi/3+1/3*np.atan(1/d)))*180/np.pi
-
+    beta = np.arctan((b+9*a*c)/(2*(1-3*a*b))-(d*(27*a**2*c+9*a*b-2))/
+                   (6*a*(1-3*a*b))*
+                   np.tan(n*np.pi/3+1/3*np.arctan(1/d)))*180/np.pi
     return beta
 
+def deflection_angle(beta, mach, gamma=1.4):
+    """Returns the deflection angle"""
+    beta *= np.pi/180
+    top = 2*(mach**2*np.sin(beta)*np.sin(beta)-1)
+    bottom = np.tan(beta)*(2+mach**2*(gamma+np.cos(2*beta)))
+    theta = np.arctan(top/bottom)
+    theta *= 180/np.pi
+    return theta
+
+def beta_max(mach, gamma=1.4):
+    """Maximum wave angle for attached oblique shock wave. Plug in
+    result into deflection_angle() for maximum
+    deflection angle that will have an attached shock"""
+    first = mach**2*(gamma-1)+4
+    second = 16*(gamma+1)
+    third = 8*mach**2*(gamma**2-1)
+    fourth = mach**4*(gamma+1)**2
+    fifth = 2*gamma*mach**2
+    beta_max = 0.5*np.arccos((first-np.sqrt(second+third+fourth))/fifth)
+    return beta_max*180/np.pi
+
+def sonic_line(mach, gamma=1.4):
+    """Returns the wave angle at which the flow behind a detached shock
+    wave will be sonic. Plug this into deflection_angle() to obtain the
+    angle on the surface at which the flow will be sonic"""
+    first = (gamma-3)*mach**2 + (gamma+1)*mach**4
+    second = 16*gamma*mach**4
+    fourth = 4*gamma*mach**4
+    beta_sonic = np.arcsin(np.sqrt((first+np.sqrt(second+first**2))/fourth))
+    return beta_sonic*180/np.pi
+
+def standoff_2d(mach):
+    """Returns shock standoff distance for a cylinder in air with
+    gamma = 1.4
+    Source: Solomon, G. E., Shock Wave Detachment
+    Distances for Plane and Axially Symmetric
+    Flow, NACA Tech Note 3213 (1952)"""
+    distance = 0.193*np.exp(4.67/mach**2)
+    return distance
+
+def standoff_2d(mach):
+    """Returns normalized shock standoff distance (shock standoff
+    distance/diameter of cylinder) for a cylinder in air with
+    gamma = 1.4
+    Source: Solomon, G. E., Shock Wave Detachment
+    Distances for Plane and Axially Symmetric
+    Flow, NACA Tech Note 3213 (1952)"""
+    curv = 0.193*np.exp(4.67/mach**2)
+    return curv
+
+def curvature_2d(mach):
+    """Returns normalized shock curvature (curvature/diameter of
+    cylinder) for a cylinder in air with gamma = 1.4
+    Source: Solomon, G. E., Shock Wave Detachment
+    Distances for Plane and Axially Symmetric
+    Flow, NACA Tech Note 3213 (1952)"""
+    distance = 0.693*np.exp(1.8/(mach-1)**.75)
+    return distance
+
+def shape_2d(theta, mach, diameter, gamma=1.4):
+    """Returns shock shape for a cylinder in air with gamma = 1.4
+    Source: Solomon, G. E., Shock Wave Detachment
+    Distances for Plane and Axially Symmetric
+    Flow, NACA Tech Note 3213 (1952)"""
+    distance = standoff_2d(mach)
+    curv = curvature_2d(mach)
+    beta = zero_OBM(theta, mach, gamma)
+    y = np.linspace(0, 1.5*diameter)
+    shape = 1/2*diameter+distance*diameter-curv*diameter*(np.sqrt(1+y**2*np.tan(beta)*np.tan(beta)/curv**2)-1)/(np.tan(beta)*np.tan(beta))
+
+    return shape
+
 def solve_Oshock(M1, p1, T1, density1, theta, gamma=1.4):
-    """Returns dictionary of all calculated values of the oblique shock from incident Mach number, pressure and temperature
+    """Returns dictionary of all calculated values of the oblique shock
+    from incident Mach number, pressure and temperature
 
     Dictionary Keys
     ---------------
-    'beta'\n
-    'p2'\n
-    'T2'\n
-    'density1'\n
-    'density2'\n
-    'Mn1'\n
-    'Mn2'\n
-    'M2'\n
-    'p01'\n
-    'p02'\n
-    'T01'\n
-    'T02'"""
+    'beta'\n 'p2'\n 'T2'\n 'density1'\n 'density2'\n 'Mn1'\n 'Mn2'\n
+    'M2'\n 'p01'\n 'p02'\n 'T01'\n 'T02'"""
+
+    if theta > deflection_angle(beta_max(M1, gamma), M1, gamma):
+        print('Deflection angle will produce a detached shock wave')
+        return
+    
     beta = zero_OBM(theta, M1, gamma)
     Mn1 = normal_mach1(M1, beta)
     p02p01, T2T1, rho2rho1, p2p1 = stagpress_ratio_Oshock(Mn1, gamma)
@@ -105,7 +185,8 @@ def solve_Oshock(M1, p1, T1, density1, theta, gamma=1.4):
     return result
 
 def print_solve_Oshock(result, decimals=4, state1='1', state2='2'):
-    """Prints out ouput of solve_Oshock in a structured manner using SI units """
+    """Prints out ouput of solve_Oshock in a structured manner using SI
+    units """
 
     print('Properties for states {} and {}'.format(state1, state2))
     print('Beta', round(result['beta'], decimals))

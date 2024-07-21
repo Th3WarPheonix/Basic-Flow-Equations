@@ -1,5 +1,6 @@
 
-"""Module containing converging-diverging nozzle equations e.g. property ratios to sonic velocity values, Mach number from area ratio"""
+"""Module containing converging-diverging nozzle equations e.g. property
+ratios to sonic velocity values, Mach number from area ratio"""
 
 import numpy as np
 
@@ -80,6 +81,7 @@ def find_Astar(Ps, Pt, M, area, gamma=1.4, R_gas=287.05):
     return Astar
 
 def massflow(Tt, Pt, area, gamma=1.4, R_gas=287.05):
-    """Returns the most amount of mass that can pass through a converging diverging nozzle"""
+    """Returns the most amount of mass that can pass through a
+    converging diverging nozzle"""
     massflow = area*Pt/np.sqrt(gamma/R_gas/Tt)*((gamma+1)/2)**(-(gamma+1)/2/(gamma-1))
     return massflow
