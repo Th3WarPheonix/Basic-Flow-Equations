@@ -1,3 +1,6 @@
+"""Module containing basic isentropic flow relation equations e.g.
+stagnation temrperature from Mach number and pressure and vice versa,
+for all properties"""
 
 """Module containing basic isentropic flow relation equations e.g.
 stagnation temrperature from Mach number and pressure and vice versa,

@@ -32,7 +32,8 @@ def PranMeyer(M1, gamma=1.4, deg=True):
     return nu
 
 def inv_PranMeyer(v, deg=True, gamma=1.4):
-    """Returns the Mach number at which the given value of the Prandtl-Meyer function occurs (given in degrees by default)"""
+    """Returns the Mach number at which the given value of the
+    Prandtl-Meyer function occurs (give in degrees by default)"""
     M = 1.3 
     M_next = 1.2 # Initial guess
     
@@ -60,13 +61,16 @@ def inv_PranMeyer(v, deg=True, gamma=1.4):
     return M
 
 def solve_ExpFan(M1, theta, gamma=1.4):
-    """Returns M2 T2/T1 and P2/P1 values as a dictionary from incident Mach number and turn angle
+    """
+    Returns M2 T2/T1 and P2/P1 values as a dictionary from
+    incident Mach number and turn angle
 
     Dictionary Keys
     ---------------
-    'M2'\n
-    'T2T1'\n
-    'p2p1'"""
+    'M2' 
+    'T2T1' 
+    'p2p1' 
+    """
     nu = PranMeyer(M1, gamma)
     M2 = inv_PranMeyer(theta + nu, gamma=gamma)
     T2T1 = temp_ratio_ExpFan(M1, M2, gamma)
@@ -78,4 +82,3 @@ def solve_ExpFan(M1, theta, gamma=1.4):
     results['p2p1'] = p2p1
 
     return results
-    

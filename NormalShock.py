@@ -53,19 +53,19 @@ def solve_Nshock(M1, gamma=1.4):
     'M2'\n 'P1P01'\n 'T1T01'\n 'rho1rho01'\n 'P2P02'\n 'T2T02'\n
     'rho2rho02'\n 'P02P01'\n 'P2P1'\n 'T2T1'\n 'rho2rho1'\n
     """
-    M2 = Mach2(M1, gamma)
+    M2 = mach2(M1, gamma)
 
-    P02P01 = stag_pressure_ratio(M1, gamma)
+    P02P01 = total_pressure_ratio(M1, gamma)
     P2P1 = pressure_ratio(M1, gamma)
     T2T1 = temperature_ratio(M1, gamma)
     rho2rho1 = density_ratio(M1, gamma)
 
     result = {}
     result['M2'] = M2
-    result['P02P01'] = P02P01
-    result['P2P1'] = P2P1
-    result['T2T1'] = T2T1
-    result['rho2rho1'] = rho2rho1
+    result['Pt2Pt1'] = P02P01
+    result['Ps2Ps1'] = P2P1
+    result['Ts2Ts1'] = T2T1
+    result['Ds2Ds1'] = rho2rho1
 
     return result
 
