@@ -4,7 +4,7 @@ a shock"""
 
 import numpy as np
 
-def Mach2(M1, gamma=1.4):
+def mach2(M1, gamma=1.4):
     """Returns Mach number after a normal shock from incident Mach
     number"""
     top = (gamma-1)*M1**2+2
@@ -12,7 +12,7 @@ def Mach2(M1, gamma=1.4):
     M2 = np.sqrt(top/bottom)
     return M2
 
-def stag_pressure_ratio(M1, gamma=1.4):
+def total_pressure_ratio(M1, gamma=1.4):
     """Returns P02/P01 through a normal shock from incident Mach
     number"""
     top1 = (gamma+1)*M1**2

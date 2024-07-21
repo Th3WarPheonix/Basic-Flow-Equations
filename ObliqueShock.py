@@ -8,8 +8,7 @@ All angles input as degrees and returned as degrees
 """
 
 import numpy as np
-import IsentropicFlow as IF
-import matplotlib.pyplot as plt
+import IsentropicFlow as isenflow
 
 def normal_mach1(M, beta):
     """Returns the mach number BEFORE an oblique shock normal to the
@@ -25,7 +24,7 @@ def normal_mach2(Mn1, gamma=1.4):
     Mn2 = np.sqrt(top/bottom)
     return Mn2
 
-def Mach2(Mn2, beta, theta):
+def mach2(Mn2, beta, theta):
     """Returns mach number after oblique shock. Give all angles in
     degrees"""
     M2 = Mn2/(np.sin((beta-theta)*np.pi/180))
