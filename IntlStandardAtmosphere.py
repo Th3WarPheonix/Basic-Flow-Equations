@@ -1,12 +1,11 @@
 from ambiance import Atmosphere
 import numpy as np
-import matplotlib.pyplot as plt
 
 """
 2024 12 01 Cleared for use. All inputs and outputs are in SI units.
 Functions output absolute property values"""
 
-class stdday(Atmosphere):
+class StandardDay(Atmosphere):
 
     @property
     def _setup(self):
@@ -78,7 +77,7 @@ class stdday(Atmosphere):
         return prss*101325
     
 
-class coldday(Atmosphere):
+class ColdDay(Atmosphere):
 
     @property
     def _setup(self):
@@ -153,7 +152,7 @@ class coldday(Atmosphere):
 
         return prss*101325
 
-class hotday(Atmosphere):
+class HotDay(Atmosphere):
 
     @property
     def _setup(self):
@@ -202,7 +201,7 @@ class hotday(Atmosphere):
         prss = prss + P2*(self.temperature/T[2])**(-g0/Rgas/L[2])*layer[2]
         return prss*101325
 
-class tropday(Atmosphere):
+class TropicalDay(Atmosphere):
 
     @property
     def _setup(self):
