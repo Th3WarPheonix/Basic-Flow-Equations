@@ -1,5 +1,5 @@
 
-"""Set of equations for frictionless heat addition in a constant area
+"""Rayleigh flow frictionless heat addition in a constant area
 duct"""
 
 def pressure_ratio(M1, gamma=1.4):
@@ -13,7 +13,7 @@ def temperature_ratio(M1, gamma=1.4):
     return Ts1Tsstar
 
 def density_ratio(M1, gamma=1.4):
-    """Calculates the inlet desnity to sonic density ratio"""
+    """Calculates the inlet density to sonic density ratio"""
     Ds1Dsstar = 1/M1**2*(1+gamma*M1**2)/(gamma+1)
     return Ds1Dsstar
 
@@ -32,8 +32,11 @@ def total_pressure_ratio(M1, gamma=1.4):
 
 def heat_addition(M1, Tt1, cp=1000, gamma=1.4):
     """Calculates the heat addition to drive the flow to sonic
-    conditions. In a real flow if the heat addition is greater than the
+    conditions. In a real flow if the heat addition is greater then the
     flow at the inlet will spill outside of the duct. Heat is returned
-    as per unit mass"""
+    as per unit mass
+    
+    cp (kJ/kg-K)
+    T (K)"""
     qstar = (total_temperature_ratio(M1, gamma)-1)*cp*Tt1
     return qstar
