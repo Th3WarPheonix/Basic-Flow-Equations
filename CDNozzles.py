@@ -133,8 +133,8 @@ def _shock_loc(AR, ARguess, gamma=1.4):
     return PsePt1
 
 def exit_shock(AR, gamma=1.4):
-    """Calculates the pressure ratio Pe/Pt7 if there was a normal shock
-    right at the exit of the nozzle. Returns the pressure ratio Pe/Pt7
+    """Calculates the pressure ratio Pse/Pt7 if there was a normal shock
+    right at the exit of the nozzle. Returns the pressure ratio Pse/Pt7
     and the exit mach number"""
     mache = MachfromAreaRatio(AR, gamma)
     p2p1 = nsh.pressure_ratio(mache)
@@ -154,15 +154,20 @@ def exit_pressure_ratios(AR, gamma=1.4):
 
 def exit_pressure_delineation(AR, gamma=1.4):
     """Calculates the nozzle exit pressure ratio (PR) for the three
-    conditions if the throat is choked but reamins subsonic to the exit,
-    if the flow does go supersonic with no shocks, and if there is a
-    shock in the nozzle. The flow is subsonic if the PR is equal to or
-    below Ps/Ptsub, there is a shock in the nozzle if the PR is between
-    Ps/Ptsub and PsPtshock, the flow is over expanded with oblique
-    shocks outside the nozzle if the PR is between PsPtshock and
-    Ps/Ptsup, the flow is perfectly expanded if the PR is equal to
-    Ps/Ptsup and the flow is under expanded if the PR is below Ps/Ptsup.
-    Returns Ps/Ptsub, PsPtshock, Ps/Ptsup"""
+    conditions
+    1. Throat is choked but flow remains subsonic to the exit
+    2. Throat is choked but flow does go supersonic with no shocks
+    3. Throat is choked but flow does go supersonic with shocks
+
+    - The flow is subsonic if the PR is equal to or below Ps/Ptsub
+    - There is a shock in the nozzle if the PR is between Ps/Ptsub and 
+    Ps/Ptshock
+    - The flow is over expanded with oblique shocks outside the nozzle
+    if the PR is between Ps/Ptshock and Ps/Ptsup
+    - The flow is perfectly expanded if the PR is equal to
+    Ps/Ptsup
+    - The flow is under expanded if the PR is below Ps/Ptsup.
+    Returns Ps/Ptsub, Ps/Ptshock, Ps/Ptsup"""
     
     PsPtshock, _ = exit_shock(AR, gamma)
     PsPtsub, PsPtsup = exit_pressure_ratios(AR, gamma)
