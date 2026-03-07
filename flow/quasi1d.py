@@ -1,10 +1,6 @@
-
-"""Module containing converging-diverging nozzle equations e.g. property
-ratios to sonic velocity values, Mach number from area ratio"""
-
 import numpy as np
-import NormalShock as nsh
-import IsentropicFlow as isenf
+import flow.normal_shock as nsh
+import flow.isentropic_flow as isenf
 
 def SonicTemperatureRatio(M, gamma=1.4):
     """Returns T*/Tt from from incident Mach number"""
@@ -21,7 +17,7 @@ def SonicPressureRatio(M, gamma=1.4):
     return PstarP
 
 def SonicAreaRatio(M, gamma=1.4):
-    """eturns A*/A from incident Mach number.
+    """Returns A*/A from incident Mach number.
     If the contraction is less than the returned value flow is not
     choked"""
     top = (gamma+1)/2

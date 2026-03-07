@@ -1,10 +1,6 @@
 from ambiance import Atmosphere
 import numpy as np
 
-"""
-2024 12 01 Cleared for use. All inputs and outputs are in SI units.
-Functions output absolute property values"""
-
 class StandardDay(Atmosphere):
 
     @property

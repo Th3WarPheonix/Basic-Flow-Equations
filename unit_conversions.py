@@ -179,12 +179,12 @@ def convert_area(area, units:str='m in'):
 
 def convert_speed(speed, units:str='m in'):
     """Convert length from meters/sec to inches/sec or meters/sec to feet/sec NOT between feet and inches
-    \nunits = 'm in' for converting to meters/sec from inches/sec
-    \nunits = 'm ft' for converting to meters/sec from ft/sec
-    \nunits = 'in' for converting to inches/sec
-    \nunits = 'ft' for converting to feet/sec
-    \nunits = 'mph m' for converting to mph to meters/sec
-    \nunits = 'kts mph' for converting to knots to mph
+    - units = 'm in' for converting to meters/sec from inches/sec
+    - units = 'm ft' for converting to meters/sec from ft/sec
+    - units = 'in' for converting to inches/sec
+    - units = 'ft' for converting to feet/sec
+    - units = 'mph m' for converting to mph to meters/sec
+    - units = 'kts mph' for converting to knots to mph
     """
     factor1 = .0254**2 # m/s to in/s
     factor2 = .0254*12 # m/s to ft/s

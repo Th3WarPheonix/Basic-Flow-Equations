@@ -25,7 +25,8 @@ def total_temperature_ratio(M1, gamma=1.4):
     return Tt1Ttstar
 
 def total_pressure_ratio(M1, gamma=1.4):
-    """Calculates the inlet total pressure to sonic total pressure ratio"""
+    """Calculates the inlet total pressure to sonic total pressure
+    ratio"""
     Pt1Ptstar = M1**2*((gamma+1)/(1+gamma*M1**2))**2*(
         (1+(gamma-1)/2*M1**2)/((gamma+1)/2))**(gamma/(gamma+1))
     return Pt1Ptstar
