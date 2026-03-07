@@ -145,7 +145,7 @@ def shape_2d(theta, mach, diameter, gamma=1.4):
 
     return shape
 
-def solve_Oshock(M1, p1, T1, density1, theta, gamma=1.4):
+def solve_ck(M1, p1, T1, density1, theta, gamma=1.4):
     """Returns dictionary of all calculated values of the oblique shock
     from incident Mach number, pressure and temperature
 
@@ -177,6 +177,13 @@ def solve_Oshock(M1, p1, T1, density1, theta, gamma=1.4):
     result['Ds2Ds1'] = rho2rho1
     
     return result
+
+def calc_mach2(mach1, theta):
+
+    beta = zero_OBM(theta, mach1)
+    Mn1 = normal_mach1(mach1, beta)
+    Mn2 = normal_mach2(Mn1)
+    return mach2(Mn2, beta, theta)
 
 def complete_solve(M1, p1, T1, density1, theta, gamma=1.4):
     """Returns dictionary of all calculated values of the oblique shock
