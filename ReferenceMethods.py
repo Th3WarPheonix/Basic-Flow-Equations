@@ -129,11 +129,3 @@ def bl_compressible(Minf, Tinf, Pinf, Rgas=287.05):
     coeff_frc_turb = 0.592/Restar**0.2
 
     shearstress = 1/2*Dstar*ue**2*coeff_frc
-
-
-import matplotlib.pyplot as plt
-
-t = np.linspace(0, 50, 11)
-v = viscosity_water(t)
-
-print(t, v)
